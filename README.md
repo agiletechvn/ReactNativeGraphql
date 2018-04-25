@@ -1,6 +1,6 @@
 # Chatty
 
-## A WhatsApp clone with React Native and Apollo
+## A WhatsApp clone with React Native and Apollo, Sagas, React Navigation, Redux Persist
 
 # Installing
 

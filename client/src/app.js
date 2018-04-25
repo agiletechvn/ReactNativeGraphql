@@ -1,58 +1,25 @@
-import React, { Component } from 'react';
-import {
-  AsyncStorage,
-} from 'react-native';
+import React, { Component } from "react";
 
-import { ApolloClient } from 'apollo-client';
-import { ApolloLink } from 'apollo-link';
-import { ApolloProvider } from 'react-apollo';
-import { composeWithDevTools } from 'redux-devtools-extension';
-import { createHttpLink } from 'apollo-link-http';
-import { createStore, combineReducers, applyMiddleware } from 'redux';
-import { Provider } from 'react-redux';
-import { ReduxCache, apolloReducer } from 'apollo-cache-redux';
-import ReduxLink from 'apollo-link-redux';
-import { onError } from 'apollo-link-error';
-import { WebSocketLink } from 'apollo-link-ws';
-import { getMainDefinition } from 'apollo-utilities';
-import { SubscriptionClient } from 'subscriptions-transport-ws';
-import { PersistGate } from 'redux-persist/lib/integration/react';
-import { persistStore, persistCombineReducers } from 'redux-persist';
-import thunk from 'redux-thunk';
-import { setContext } from 'apollo-link-context';
-import _ from 'lodash';
+import { ApolloClient } from "apollo-client";
+import { ApolloLink } from "apollo-link";
+import { ApolloProvider } from "react-apollo";
+import { createHttpLink } from "apollo-link-http";
+import { Provider } from "react-redux";
+import ReduxLink from "apollo-link-redux";
+import { ReduxCache } from "apollo-cache-redux";
+import { onError } from "apollo-link-error";
+import { WebSocketLink } from "apollo-link-ws";
+import { getMainDefinition } from "apollo-utilities";
+import { SubscriptionClient } from "subscriptions-transport-ws";
+import { PersistGate } from "redux-persist/lib/integration/react";
+import { setContext } from "apollo-link-context";
+import _ from "lodash";
+import AppWithNavigationState from "./navigation";
 
-import AppWithNavigationState, {
-  navigationReducer,
-  navigationMiddleware,
-} from './navigation';
-import auth from './reducers/auth.reducer';
-import { logout } from './actions/auth.actions';
+import { LOGOUT_REQUESTED } from "./constants/actions";
+import { store, persistor } from "./store";
 
-const URL = 'localhost:8080'; // set your comp's url here
-
-const config = {
-  key: 'root',
-  storage: AsyncStorage,
-  blacklist: ['nav', 'apollo'], // don't persist nav for now
-};
-
-const reducer = persistCombineReducers(config, {
-  apollo: apolloReducer,
-  nav: navigationReducer,
-  auth,
-});
-
-const store = createStore(
-  reducer,
-  {}, // initial state
-  composeWithDevTools(
-    applyMiddleware(thunk, navigationMiddleware),
-  ),
-);
-
-// persistent storage
-const persistor = persistStore(store);
+const URL = "localhost:8080"; // set your comp's url here
 
 const cache = new ReduxCache({ store });
 
@@ -67,8 +34,8 @@ const middlewareLink = setContext((req, previousContext) => {
   if (jwt) {
     return {
       headers: {
-        authorization: `Bearer ${jwt}`,
-      },
+        authorization: `Bearer ${jwt}`
+      }
     };
   }
 
@@ -82,20 +49,20 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
     console.log({ graphQLErrors });
     graphQLErrors.forEach(({ message, locations, path }) => {
       console.log({ message, locations, path });
-      if (message === 'Unauthorized') {
+      if (message === "Unauthorized") {
         shouldLogout = true;
       }
     });
 
     if (shouldLogout) {
-      store.dispatch(logout());
+      store.dispatch({ type: LOGOUT_REQUESTED });
     }
   }
   if (networkError) {
-    console.log('[Network error]:');
+    console.log("[Network error]:");
     console.log({ networkError });
     if (networkError.statusCode === 401) {
-      logout();
+      store.dispatch({ type: LOGOUT_REQUESTED });
     }
   }
 });
@@ -107,7 +74,7 @@ export const wsClient = new SubscriptionClient(`ws://${URL}/subscriptions`, {
   connectionParams() {
     // get the authentication token from local storage if it exists
     return { jwt: store.getState().auth.jwt };
-  },
+  }
 });
 
 const webSocketLink = new WebSocketLink(wsClient);
@@ -116,10 +83,10 @@ const requestLink = ({ queryOrMutationLink, subscriptionLink }) =>
   ApolloLink.split(
     ({ query }) => {
       const { kind, operation } = getMainDefinition(query);
-      return kind === 'OperationDefinition' && operation === 'subscription';
+      return kind === "OperationDefinition" && operation === "subscription";
     },
     subscriptionLink,
-    queryOrMutationLink,
+    queryOrMutationLink
   );
 
 const link = ApolloLink.from([
@@ -127,13 +94,13 @@ const link = ApolloLink.from([
   errorLink,
   requestLink({
     queryOrMutationLink: middlewareLink.concat(httpLink),
-    subscriptionLink: webSocketLink,
-  }),
+    subscriptionLink: webSocketLink
+  })
 ]);
 
 export const client = new ApolloClient({
   link,
-  cache,
+  cache
 });
 
 export default class App extends Component {

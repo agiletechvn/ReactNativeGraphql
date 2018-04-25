@@ -32,7 +32,7 @@ import GROUP_ADDED_SUBSCRIPTION from "./graphql/group-added.subscription";
 
 import { wsClient } from "./app";
 
-import { LOGOUT } from "./constants/constants";
+import { LOGOUT } from "./constants/actions";
 
 // tabs in main screen
 const MainScreenNavigator = TabNavigator(
