@@ -170,7 +170,7 @@ class Signin extends Component {
         <View style={styles.inputContainer}>
           <TextInput
             onChangeText={email => this.setState({ email })}
-            placeholder={"Email"}
+            placeholder={"Email/Username"}
             autoCapitalize="none"
             style={styles.input}
           />

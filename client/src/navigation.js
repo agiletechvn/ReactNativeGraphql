@@ -41,7 +41,13 @@ const MainScreenNavigator = TabNavigator(
     Settings: { screen: Settings }
   },
   {
-    initialRouteName: "Chats"
+    initialRouteName: "Chats",
+    tabBarOptions: {
+      labelStyle: {
+        fontSize: 14,
+        marginBottom: 15
+      }
+    }
   }
 );
 
