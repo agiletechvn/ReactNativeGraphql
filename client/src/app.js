@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import { Platform } from "react-native";
 import { ApolloClient } from "apollo-client";
 import { ApolloLink } from "apollo-link";
 import { ApolloProvider } from "react-apollo";
@@ -19,7 +19,7 @@ import AppWithNavigationState from "./navigation";
 import { LOGOUT_REQUESTED } from "./constants/actions";
 import { store, persistor } from "./store";
 
-const URL = "localhost:8080"; // set your comp's url here
+const URL = (Platform.OS === "android" ? "10.0.2.2" : "localhost") + ":8080"; // set your comp's url here
 
 const cache = new ReduxCache({ store });
 
