@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import {
   ActivityIndicator,
   Alert,
@@ -9,56 +9,54 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View,
-} from 'react-native';
-import { graphql, compose } from 'react-apollo';
-import { connect } from 'react-redux';
+  View
+} from "react-native";
+import { graphql, compose } from "react-apollo";
+import { connect } from "react-redux";
 
-import {
-  setCurrentUser,
-} from '../actions/auth.actions';
-import LOGIN_MUTATION from '../graphql/login.mutation';
-import SIGNUP_MUTATION from '../graphql/signup.mutation';
+import { setCurrentUser } from "../actions/auth.actions";
+import LOGIN_MUTATION from "../graphql/login.mutation";
+import SIGNUP_MUTATION from "../graphql/signup.mutation";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    backgroundColor: '#eeeeee',
-    paddingHorizontal: 50,
+    justifyContent: "center",
+    backgroundColor: "#eeeeee",
+    paddingHorizontal: 50
   },
   inputContainer: {
-    marginBottom: 20,
+    marginBottom: 20
   },
   input: {
     height: 40,
     borderRadius: 4,
     marginVertical: 6,
     padding: 6,
-    backgroundColor: 'rgba(0,0,0,0.2)',
+    backgroundColor: "rgba(0,0,0,0.2)"
   },
   loadingContainer: {
     left: 0,
     right: 0,
     top: 0,
     bottom: 0,
-    position: 'absolute',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    position: "absolute",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center"
   },
   switchContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 12,
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 12
   },
   switchAction: {
     paddingHorizontal: 4,
-    color: 'blue',
+    color: "blue"
   },
   submit: {
-    marginVertical: 6,
-  },
+    marginVertical: 6
+  }
 });
 
 function capitalizeFirstLetter(string) {
@@ -67,8 +65,8 @@ function capitalizeFirstLetter(string) {
 
 class Signin extends Component {
   static navigationOptions = {
-    title: 'Chatty',
-    headerLeft: null,
+    title: "Chatty",
+    headerLeft: null
   };
 
   constructor(props) {
@@ -79,7 +77,7 @@ class Signin extends Component {
     }
 
     this.state = {
-      view: 'login',
+      view: "login"
     };
     this.login = this.login.bind(this);
     this.signup = this.signup.bind(this);
@@ -96,56 +94,64 @@ class Signin extends Component {
     const { email, password } = this.state;
 
     this.setState({
-      loading: true,
+      loading: true
     });
 
-    this.props.login({ email, password })
+    this.props
+      .login({ email, password })
       .then(({ data: { login: user } }) => {
         this.props.dispatch(setCurrentUser(user));
         this.setState({
-          loading: false,
+          loading: false
         });
-      }).catch((error) => {
+      })
+      .catch(error => {
         this.setState({
-          loading: false,
+          loading: false
         });
         Alert.alert(
           `${capitalizeFirstLetter(this.state.view)} error`,
           error.message,
           [
-            { text: 'OK', onPress: () => console.log('OK pressed') }, // eslint-disable-line no-console
-            { text: 'Forgot password', onPress: () => console.log('Forgot Pressed'), style: 'cancel' }, // eslint-disable-line no-console
-          ],
+            { text: "OK", onPress: () => console.log("OK pressed") }, // eslint-disable-line no-console
+            {
+              text: "Forgot password",
+              onPress: () => console.log("Forgot Pressed"),
+              style: "cancel"
+            } // eslint-disable-line no-console
+          ]
         );
       });
   }
 
   signup() {
     this.setState({
-      loading: true,
+      loading: true
     });
     const { email, password } = this.state;
-    this.props.signup({ email, password })
+    this.props
+      .signup({ email, password })
       .then(({ data: { signup: user } }) => {
         this.props.dispatch(setCurrentUser(user));
         this.setState({
-          loading: false,
+          loading: false
         });
-      }).catch((error) => {
+      })
+      .catch(error => {
         this.setState({
-          loading: false,
+          loading: false
         });
         Alert.alert(
           `${capitalizeFirstLetter(this.state.view)} error`,
           error.message,
-          [{ text: 'OK', onPress: () => console.log('OK pressed') }],  // eslint-disable-line no-console
+          [{ text: "OK", onPress: () => console.log("OK pressed") }] // eslint-disable-line no-console
         );
       });
   }
 
   switchView() {
     this.setState({
-      view: this.state.view === 'signup' ? 'login' : 'signup',
+      view: this.state.view === "signup" ? "login" : "signup"
     });
   }
 
@@ -153,23 +159,24 @@ class Signin extends Component {
     const { view } = this.state;
 
     return (
-      <KeyboardAvoidingView
-        behavior={'padding'}
-        style={styles.container}
-      >
-        {this.state.loading ?
+      <KeyboardAvoidingView behavior={"padding"} style={styles.container}>
+        {this.state.loading ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator />
-          </View> : undefined}
+          </View>
+        ) : (
+          undefined
+        )}
         <View style={styles.inputContainer}>
           <TextInput
             onChangeText={email => this.setState({ email })}
-            placeholder={'Email'}
+            placeholder={"Email"}
+            autoCapitalize="none"
             style={styles.input}
           />
           <TextInput
             onChangeText={password => this.setState({ password })}
-            placeholder={'Password'}
+            placeholder={"Password"}
             secureTextEntry
             style={styles.input}
           />
@@ -177,19 +184,16 @@ class Signin extends Component {
         <Button
           onPress={this[view]}
           style={styles.submit}
-          title={view === 'signup' ? 'Sign up' : 'Login'}
+          title={view === "signup" ? "Sign up" : "Login"}
           disabled={this.state.loading || !!this.props.auth.jwt}
         />
         <View style={styles.switchContainer}>
           <Text>
-            { view === 'signup' ?
-              'Already have an account?' : 'New to Chatty?' }
+            {view === "signup" ? "Already have an account?" : "New to Chatty?"}
           </Text>
-          <TouchableOpacity
-            onPress={this.switchView}
-          >
+          <TouchableOpacity onPress={this.switchView}>
             <Text style={styles.switchAction}>
-              {view === 'login' ? 'Sign up' : 'Login'}
+              {view === "login" ? "Sign up" : "Login"}
             </Text>
           </TouchableOpacity>
         </View>
@@ -199,41 +203,37 @@ class Signin extends Component {
 }
 Signin.propTypes = {
   navigation: PropTypes.shape({
-    goBack: PropTypes.func,
+    goBack: PropTypes.func
   }),
   auth: PropTypes.shape({
     loading: PropTypes.bool,
-    jwt: PropTypes.string,
+    jwt: PropTypes.string
   }),
   dispatch: PropTypes.func.isRequired,
   login: PropTypes.func.isRequired,
-  signup: PropTypes.func.isRequired,
+  signup: PropTypes.func.isRequired
 };
 
 const login = graphql(LOGIN_MUTATION, {
   props: ({ mutate }) => ({
     login: user =>
       mutate({
-        variables: { user },
-      }),
-  }),
+        variables: { user }
+      })
+  })
 });
 
 const signup = graphql(SIGNUP_MUTATION, {
   props: ({ mutate }) => ({
     signup: user =>
       mutate({
-        variables: { user },
-      }),
-  }),
+        variables: { user }
+      })
+  })
 });
 
 const mapStateToProps = ({ auth }) => ({
-  auth,
+  auth
 });
 
-export default compose(
-  login,
-  signup,
-  connect(mapStateToProps),
-)(Signin);
+export default compose(login, signup, connect(mapStateToProps))(Signin);

@@ -4,7 +4,12 @@
 	"private": true,
 	"scripts": {
 		"start": "node node_modules/react-native/local-cli/cli.js start",
-		"test": "jest"
+		"test": "jest",
+		"ba": "cd android && ./gradlew assembleRelease",
+		"ia":
+			"adb devices | awk 'NR>1 && $1 ~ /^[^:]+$/ { system(\"adb -s \" $1 \" install -r android/app/build/outputs/apk/app-release.apk\") }'",
+		"ios": "react-native run-ios",
+		"android": "react-native run-android"
 	},
 	"dependencies": {
 		"apollo-cache-redux": "^0.1.0-alpha.7",
