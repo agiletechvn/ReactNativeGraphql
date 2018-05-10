@@ -22,7 +22,7 @@ JWT_SECRET=your_secret
 yarn start                          # start the server
 cd client
 URL=192.168.24.223 yarn start       # start client
-react-native run-ios                # start RN client
+yarn ios                            # start RN client on iOS Simulator
 ```
 
 # Demo
