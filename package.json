@@ -35,7 +35,7 @@
     "graphql-subscriptions": "^0.5.6",
     "graphql-tools": "^2.18.0",
     "jsonwebtoken": "^8.1.0",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.19",
     "sequelize": "^4.4.2",
     "sqlite3": "^3.1.8",
     "subscriptions-transport-ws": "^0.9.5"
