@@ -34,7 +34,7 @@
     "graphql-date": "^1.0.3",
     "graphql-subscriptions": "^0.5.6",
     "graphql-tools": "^2.18.0",
-    "jsonwebtoken": "^8.1.0",
+    "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.4",
     "sequelize": "^4.4.2",
     "sqlite3": "^3.1.8",
